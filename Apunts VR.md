@@ -1,3 +1,91 @@
+# Setup VR for develop in Oculus Quest
+*With a little help from Quinn Kuslich https://www.youtube.com/watch?v=HgwXqRuEOo0*
+
+Hardware:
+- Oculus Quest HMD
+- USB type C cable (charging cable)
+
+Software:
+- Unreal Engine
+- Android Studio
+
+## Step 1 - Creating an Oculus Developer Organization
+- Create an Oculus Creator Account. https://developer.oculus.com/.
+- Login with your facebook account.
+- Create an Oculus developer organization.
+
+## Step 2 - Placing the Oculus Quest into Developer Mode
+Put your Oculus Quest into developer mode, using your mobile Oculus app.(Maybe you need to restart).
+## Step 3 - Setting up Android Studio
+- Check https://docs.unrealengine.com/4.26/en-US/SharingAndReleasing/Mobile/Android/AndroidSDKRequirements/ to choose a correct version for Android Studio for you Unreal Engine version. **[AND NEVER UPDATE]**
+- For example: Unreal 4.26 version: NDK Version : NDK r21b and Android Studio Version 4.0
+- Download Android Studio (from donwload archive https://developer.android.com/studio/archive) for windows and install it in your computer.
+- After install, open it and Choose "Do not import settings". Also choose not to share your data with Google.
+- Setup Android Studio:
+  - Choose Custom
+  - Select your file location for Gradle (a build automation tool for multi-language software development). Leave as default.
+  - Select your UI Theme (dark/light)
+  - SDK Components Setup by default too.
+  - Emulator Setting by default too.
+  - Click finish and wait for install process (may take a while).
+  - Close Android Studio.
+
+## Step 4 - Setting  up the Oculus Developer Hub
+- Download Oculus Developer Hub Aplication from https://developer.oculus.com/ and install it on your computer.
+- Login with your facebook account.
+- Open program.
+  - Maybe you will be answered about ADB (Android Debug Bridge) client and version that it use. If this happens press Change ADB path. This actions need to restart Oculus Developer Hub.
+  - Make sure that your Org Manager tab are using your Name organization setted in step 1.
+  - If you connect your headset, click on My device to manage it. If it doesn't check inside your headset and allow your machine to access your headsets data.
+
+## Step 5 - Setting up Unreal Engine for Oculus Quest Development
+- Open up the file explorer and locate where you have installed your Unreal Engine version.
+- Go to Engine/Extras/Android
+- Locate a file called SetupAndroid.Bat and run it.
+  - If you have an Update failed message be sure that you installed a correct version for Android Studio for you Unreal Engine version. Check **Step 3**
+ 
+- Accept license Agreement (y) and a download starts
+- Press any key after the process to close process.
+
+**That all. You have your PC, headset and Unreal engine for Quest development.**
+
+## Step 6 - Creating our Unreal Project and Packaging to the Oculus Quest 2
+- Make projects with:
+   - Target hardware: **Mobile/tablet**
+   - Performace settings to **scalable 3D or 2D**
+   *You can change in a opened project in Edit Menu ->Project setting Target Hardware*
+   
+- In the Level map (for a best performace):
+   - Use *directtional lights* with *Mobility* to *Static*
+   - Put *Intensity* to *1.15 lux* (this is ad advice only)
+
+- In *Edit Menu ->Plugins*:
+   - Locate Virtual tab ann make sure that the Oculur VR plugin is enable.
+   
+- In *Edit Menu ->Project setting*:
+   - Make sure that your Game Default is the map you want. 
+   - In *Supported Platforms* make check the android box and the windows (32-bit) box
+   - In *Engine ->rendering* 
+     - Set *Mobile MSAA* to 4x MSAA
+	 - Set *VR ->Mobile HDR* to check.
+   - In *Platforms ->Android*
+     - At the top of the tab you should see a red banner. Click in *Configure Now*
+     - In *Android Package name* put a name to your aplication with this formula. If you don't the packaging process will fail. ***com.company.gamename***.
+	 - In *Minimum SDK Version* set to 23
+	 - In *Target SDK Version* set to 25
+	 - Set *Enable FullScreen Immersive on KitKat and abobe devices* to check.
+	 - In *Advanced APK Packaging section ->* set *Remove Oculus Signature Files from Distribution APK*.
+	 - Add *Package for Oculus Mobile devices* and set *Oculus Quest* or *Oculus Quest2*
+- In Editor *Launch* Icon, now you can choose your device where you want to launch the game, **Oculus Quest 2** in that case. This launch the packaging process.
+
+**BEWARE! You maybe see that Unreal Editor looks frozen. NO. DO NOT STOP Unreal task. WAIT. It have a lot of work to do. 3500 shaders, for example.**
+
+**BEWARE! If project fails to build. Go to Android Studio and Uninstall SDK tools 31.0. Unreal will download itself the version that need.**
+
+- In Output Log, when process finish, you would see a line like *Stating Intent* followed by your poject name. This marks that your game is in your Oculus headset.
+## Step 7 - Testing our Oculus Quest Build
+## Step 8 - Sharing our test build with others
+
 # Step tp VR
 
 Unreal detects automaticaly translation and rotation for headset and put values in camera character.
@@ -21,9 +109,10 @@ Us a character for VR movement. Because is a human like and match well with our 
 ---
 
 El mandos van sols
-Oculus touch Thumbstick X 
-Oculus touch Thumbstick Y
-Es poses a input i au
+- Oculus touch Thumbstick X 
+- Oculus touch Thumbstick Y
+
+Els poses a input i au.
 
 ---
 
