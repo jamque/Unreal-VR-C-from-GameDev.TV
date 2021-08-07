@@ -1,4 +1,4 @@
-Step tp VR
+# Step tp VR
 
 Unreal detects automaticaly translation and rotation for headset and put values in camera character.
 
@@ -9,34 +9,39 @@ Us a character for VR movement. Because is a human like and match well with our 
    - Set default pawnclass as VRCharacter
 - Insert a new component in VRCharacter. UCameraComponent pointer as private named  Camera.
 - Attach to root component in VRCharacter constructor
+```c
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(GetRootComponent());
+```
 	
 - Create axis (There are inputs specifics for VR Oculus inputs touch)
 - bind them
 - Use AddMovementInput in bind functions to move character where Camera look forward and strafe
 
------------------------------------
+---
 
 El mandos van sols
 Oculus touch Thumbstick X 
 Oculus touch Thumbstick Y
 Es poses a input i au
 
------------------------
+---
+
 Move cam component and Actor at the same place even you move in space.
 Playspace Offset
 If we move root capsule, head display move to. We must to reposition head display.
 
 - Create a USceneComponent and use as root (VRRoot). This is child of RootComponent (Capsule in this case)
 - Setup Camera as root of this USceneComponent.
+```c
 	FVector relPos = Camera->GetComponentLocation() - GetActorLocation();
 	relPos.Z = 0.0f; // Only if always walk on a perpendicular plane.
 	// General case: FVector::VectorPlaneProject();
 	AddActorWorldOffset(relPos);
 	VRArrel->AddWorldOffset(-relPos);
-------------------------
-VR Sickness
+```  
+---
+## VR Sickness
 See movement when you are not moving
 Senses: (3)
 - Visual (reference point)
@@ -54,7 +59,7 @@ How can We avoid VR sickness?
 - Teleport?
 - Tunnel or blinkers, fade to tunnel
 
-| Technique | Visual | Vestibular | Propriosensoty | Cons?
+| Technique | Visual | Vestibular | Propriosensoty | Cons? |
 |---|---|---|---|---|
 | Movement in play space | Fooled by tracking head closesy | True movement | True movement | Limited by play space size |
 | Teleporting | Suppressed by fading in/out during teleport | No movement | No movement | Not very immersive. (Implemented: error to teleport up-dow or long walks to arrive to point. |
@@ -64,9 +69,9 @@ How can We avoid VR sickness?
 | Cockpit simulation | Fixed reference and minimized peripheral vision | Ignored | Sitting simulation anyway | Still can't hadle very jerky motion. |
 | Blinkers | Minimized peripheral vision | Movements always in direction of head | Ignored | Limits how movement can work |
 
-------------------------------
-Teleport
-Howw Teleport Will work
+---
+## Teleport
+How Teleport Will work
 1- Find the teleport destination
 2- Show the destination to the player (cylinder with material)
 3- Player clicks and FAde out the viewport
@@ -77,15 +82,16 @@ Howw Teleport Will work
 Add a StaticMesh Component to player and setup attachment to RootComponent.
 Add cylinder Mesh, via BP. Make a BP son of you BPCharacter.
 
-Create a function UpdateDestination.
-Create and Use a DistanceTeleport class attribute to make distance to teleport parametrical.
+Create a function `UpdateDestination`.
+Create and Use a `DistanceTeleport` class attribute to make distance to teleport parametrical.
 
 Tracing LineTraceSingleByChannel
 ECC_Visibility
 DrawDebugLine
 
-Use of GetWorld, as a global pointer for utilities.
+Use of `GetWorld`, as a global pointer for utilities.
 
+```c
 	FHitResult QuiHaSigut;
 	FVector Inici = Camera->GetComponentLocation();
 	FVector Fi = Camera->GetForwardVector() * DistanciaTeleportMax;
@@ -102,15 +108,16 @@ Use of GetWorld, as a global pointer for utilities.
 		Desti->SetVisibility(false);
 		DrawDebugLine(GetWorld(), Inici, Fi, FColor::Blue);
 	}
-	
-------------------------------
-Materials
+```
+
+---
+## Materials
 cylinder collision with himself, at next frame.
 Change to No collision preset
 If you create a VR BP Project....wait...39%...wait shaders compialtion in CPU.
 After that 5600 shader start to compile.
-Migrate -> MI_TeleportCylinderPreview
-------------------------------
+`Migrate -> MI_TeleportCylinderPreview`
+---
 Fades, timers and teleporting
 Fade in and out timing must change by designers
 
@@ -123,8 +130,8 @@ Assign in input project settings, action button to teleport.
 BindAction in Character with IE_Released
 https://docs.unrealengine.com/4.26/en-US/API/Runtime/Engine/Engine/EInputEvent/
 4-
-Move ACtor to Actor Component Location
-	SetActorLocation(Desti->GetComponentLocation());
+Move Actor to Actor Component Location
+	`SetActorLocation(Desti->GetComponentLocation());`
 	
 5-
 GetWorldTimerManager
@@ -146,6 +153,7 @@ https://docs.unrealengine.com/4.26/en-US/API/Runtime/Engine/Components/UCapsuleC
 - Debug the teleport issue
 	- Where is the actor center?
 
+```c
 #include "Components/CapsuleComponent.h"
 
 void AVRCharacter::IniciaTeleport()
@@ -177,9 +185,10 @@ void AVRCharacter::FinalitzaTeleport()
 		PC->PlayerCameraManager->StartCameraFade(1.0f, 0.0f, TempsTeleportFade, FLinearColor::Black, false, true);
 	}
 }
+```
 
-------------------------------
-Projecting Onto the NavMesh
+---
+## Projecting Onto the NavMesh
 Teleporting where I can be, not in walls or air places. Using navmesh.
 Maybe using a surface normal it could be enough, but it is not enought.
 
@@ -204,6 +213,7 @@ We want the location of this struct.
 In file projectname.Build.cs add NavigationSystem Module
    PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "NavigationSystem" });
 
+```c
 #include "NavigationSystem.h"
 
 In ActualitzaDestiTeleport
@@ -223,10 +233,11 @@ In ActualitzaDestiTeleport
 			}
 		}
 	}
-
+```
 
 Refactoring two functions
 
+```c
 bool AVRCharacter::CercaDestiTeleport(FVector& PuntDesti)
 {
 	bool resultat = false;
@@ -264,8 +275,8 @@ void AVRCharacter::ActualitzaDestiTeleport()
 		Desti->SetVisibility(false);
 	}
 }
-
-------------------------------
+```
+---
 Create blinkness in viewport, like a helmet
 with post processing.
 Prevent VR sickness when we run or move fast. Because this add a reference point
@@ -286,7 +297,7 @@ Create a Tunnel Effect
 - Remember to preview their results in game
 - Can you make a tunnel effect Material?
 
-------------------------------
+---
 Use Dynamic Material Instance 
 to change Radius for tunnel dynamicaly
 
@@ -295,16 +306,13 @@ and a Material Interface reference in VRCharacter in order to assign
 a material BASE for Tunnel vision
 
 - Remove post processing from the level
-- Create a dynamic material instance
-	UMaterialInstanceDynamic::Create reference from material Base
-	Intance private and Base protected and Bluprint editable.
-- Configure the post processing component
-	EfecteTunnel->AddOrUpdateBlendable(VisorMaterialInstancia);
-[ALERT: When you recompile C Class, BP Child Class, 
-	LOST Material Base Reference, or not] (Random editor lose things)
-- Set the radius in code
-	But only in general mode. BeginPlay
+- Create a dynamic material instance `UMaterialInstanceDynamic::Create` reference from material Base	Intance private and Base protected and Bluprint editable.
+- Configure the post processing component `EfecteTunnel->AddOrUpdateBlendable(VisorMaterialInstancia);`
+\[ALERT\]: When you recompile C Class, BP Child Class,
+  LOST Material Base Reference, or not] (Random editor lose things)
+- Set the radius in code but only in general mode. `BeginPlay`
 	
+```c
 	if (VisorMaterialBase != nullptr)
 	{
 		VisorMaterialInstancia = UMaterialInstanceDynamic::Create(VisorMaterialBase, this);
@@ -312,16 +320,17 @@ a material BASE for Tunnel vision
 		VisorMaterialInstancia->SetScalarParameterValue(TEXT("Radius"), 0.6f);
 
 	}
+```
 
-------------------------------
+---
 Adjusting Radius with a Curve
 When your velocity change, Tunnel vision grows
 
 Set Axis for hand controllers in Projects settings -> Input
 Add  controllers (thumbstick) for each hand controler. In steamVR names must
-be Move_X Move_Y for Axis.
+be `Move_X Move_Y` for Axis.
 
-Add new Miscellaneus->Curve to Content Folder. Curve float.
+Add new `Miscellaneus->Curve` to Content Folder. Curve float.
 
 Curves have GetFloatValue to get Value.
 Add UCurveFloat* to Character in C++ in order to give our asset curve via BP
@@ -331,6 +340,8 @@ Add UCurveFloat* to Character in C++ in order to give our asset curve via BP
 - Get the radius from curve
 - Set the radius to material instance
 
+
+```c
 void AVRCharacter::ActualitzaVisor()
 {
 	float Velocitat = GetVelocity().Size();
@@ -340,7 +351,9 @@ void AVRCharacter::ActualitzaVisor()
 		VisorMaterialInstancia->SetScalarParameterValue(TEXT("Radius"), Radi);
 	}
 }
-------------------------------
+```
+
+---
 Creating tunnel vision.
 Visor in walk direction.
 
@@ -364,7 +377,7 @@ To projectScreen
 APlayerController::ProjectWorldLocationToScreen
 Use Velocity as Normal with .GetSafeNormal()
 
-Use IsNearlyZero() to check FVector == 0.0f
+Use `IsNearlyZero()` to check `FVector == 0.0f`
 
 When Calculate WorldLocation *100 or *1000 MoveVector
 
@@ -379,6 +392,7 @@ Calculate The Center
 - The focus of the circle should be still
 - BONUS: Make going backwards work
 
+```c
 void AVRCharacter::ActualitzaVisor()
 {
 	float Velocitat = GetVelocity().Size();
@@ -392,7 +406,9 @@ void AVRCharacter::ActualitzaVisor()
 		VisorMaterialInstancia->SetVectorParameterValue(TEXT("Centre"), dada);
 	}
 }
+```
 
+```c
 FVector2D AVRCharacter::CalculaCentreVisor()
 {
 	FVector2D posicioScreen = FVector2D(0.5f, 0.5f);
@@ -424,12 +440,16 @@ FVector2D AVRCharacter::CalculaCentreVisor()
 
 	return posicioScreen;
 }
+```
 
-ALERTA BUG !!! 
+:warning: **ALERTA BUG !!!**
+
 Al Provar en VR. Que calculi primer on va, que inici el Fade i abans de tornar es quan posiciona.
+
 ------------------------------
-FI PART 1
+# FI PART 1
 ------------------------------
+
 Hand Controller Components
 Mark teleport destination with Controllers.
 UMotionControllerComponent
@@ -454,7 +474,7 @@ In IniciaTeleport and CercaDestiTeleport functions change camera references for 
 Rotate in Right Axis, LeftController Forward vector in CercaDestiTeleport in order to use controller a little bit rotated to point to gorund conformtable.
 Use RotateAngleAxis in FVector.
 
-------------------------------
+---
 Parabolic Teleport Pointer
 Draw a line from Controller to Teleport Point
 Use a Parabolic path. We must to Draw a Parabolic Path
@@ -473,6 +493,7 @@ Predict the Parabola
 - Set the teleport location from the parabola
 - Play test
 
+```c
 #include "Kismet/GameplayStatics.h"
 UGameplayStatics::PredictProjectilePath
 
@@ -498,8 +519,9 @@ UGameplayStatics::PredictProjectilePath
 
 	FPredictProjectilePathResult ResultatParabola;
 	TeTocat = UGameplayStatics::PredictProjectilePath(this, ParametresParabola, ResultatParabola);
+```
 
-------------------------------
+---
 Using A USplineComponent
 To draw 
 2- Create a spline interpolation
@@ -517,6 +539,8 @@ Update the Spline
 - What type of point should they be?
 
 AddPoints from USplineComponent
+
+```c
 FSplinePoint
 // Inside if (Nav->ProjectPointToNavigation(Onhetocat, Projecciotocat))
 //   at AVRCharacter::CercaDestiTeleport(FVector& PuntDesti)
@@ -534,9 +558,10 @@ FSplinePoint
 	}
 	TeleportPath->ClearSplinePoints(false);
 	TeleportPath->AddPoints(moltsPunts);
-	
-------------------------------
-Dynamically Constructing UObjects
+```
+
+---
+## Dynamically Constructing UObjects
 
 Draw Sphere dinamically where there are points from the Splines.
 
@@ -558,10 +583,12 @@ Create an Object Pool
 - Store in an array
 - Only create new if needed.
 
-------------------------------
-Deforming Meshes With Splines
+---
+## Deforming Meshes With Splines
 
 Do not Remove meshes from array. Use SetVisibility and always create meshes.
+
+```c
 bool AVRCharacter::CercaDestiTeleport(FVector& PuntDesti)
 {
 	bool resultat = false;
@@ -642,6 +669,7 @@ bool AVRCharacter::CercaDestiTeleport(FVector& PuntDesti)
 	}
 	return resultat;
 }
+```
 
 We going to use SplineMesh, and no use Sphere.
 We need to give points to SplineMesh.
@@ -661,6 +689,7 @@ begin point - segments
 - Set the mesh endpoints
 - Hide any extras
 
+```c
 	for (int32 count = 0; count < DynamicMeshArray.Num(); count++)
 	{
 		FVector Posicio, Tangent;
@@ -669,23 +698,26 @@ begin point - segments
 		TeleportPath->GetLocalLocationAndTangentAtSplinePoint(count+1, PosicioFi, TangentFi);
 		DynamicMeshArray[count]->SetStartAndEnd(Posicio, Tangent, PosicioFi, TangentFi);
 	}
+```
+
 WARNING!! DynamicMeshArray.Num() without -1, because GetLocalLocationAndTangentAtSplinePoint
 watch to return last element if you demand a far away ID. Then conut+1 works.
-------------------------------
+
+---
 Refactoritzem !!!
 
 Examen : 66
 
 ------------------------------
-Extracting Hand Controller Actors
-
+## Extracting Hand Controller Actors
 
 Refactoring all VRCharacter.
 Minimaze the code repetition
 
 Create HandController Class C++
-Put this code in BeginPlay
+Put this code in `BeginPlay`
 
+```c
 LeftController = GetWorld()->SpawnActor<AHandController>(HandControllerClass);
 if (LeftController != nullptr)
 {
@@ -701,6 +733,7 @@ if (RightController != nullptr)
     RightController->SetHand(EControllerHand::Right);
     RightController->SetOwner(this); // FIX FOR 4.22
 }
+```
 
 Extract the controller
 - Pull out UMotionControllerComponents into the Hand Controller
@@ -708,8 +741,8 @@ HandController.h HandController.cpp
 - Create BP Child to set Mesh (quen o cal perque el mesh ya ve de serie en 4.22)
 - Fix any build errore that arise
 
-------------------------------
-EXTRA: NO TOQUES LO QUE NO HAY QUE TOCAR, COPON.
+---
+### EXTRA: NO TOQUES LO QUE NO HAY QUE TOCAR, COPON.
 NO ME TOQUES NAH de la CAMARAH
 
 Altres notes de mirar els BP
@@ -722,8 +755,9 @@ AttachActorToComponent  VRRoot
 Location and Rotation Rule Snap to Target
 Scale Rule Keep World 
 
-------------------------------
-Querying Overlapping Actors
+---
+
+## Querying Overlapping Actors
 
 Climbing start
 
@@ -736,6 +770,7 @@ Add Components : Box Collision and StaticMesh (Insert Cube in slot)
 Add tag Climbable
 
 With overlap event we detect than Controller touch object
+
 FActorBeginOverlapSignature OnActorBeginOverlap
 
 // Callbacks
@@ -756,6 +791,7 @@ AActor::GetOverlappingActors
 Change Collision from StaticMesh to OverlapAllDynamics
 and in BP_Hand Motion Controller, Collision to OverlapAllDynamics
 
+```c
 private:
 	// Crides d'esdeveniments - Callback
 
@@ -771,9 +807,9 @@ private:
 	//State variable
 	bool bCanClimb;
 	
-In CPP:
+# In CPP:
 
-In BeginPlay:
+# In BeginPlay:
 	OnActorBeginOverlap.AddDynamic(this, &AHandController::ActorBeginOverlap);
 	OnActorEndOverlap.AddDynamic(this, &AHandController::ActorEndOverlap);
 
@@ -805,9 +841,11 @@ bool AHandController::CanClimb() const
 	}
 	return false;
 }
+```
 
-------------------------------
-Hapic Feedback Effects
+---
+
+## Hapic Feedback Effects
 vibration
 
 Assets: Haptic Feedback Effect (Buffer, Curve, Sound Wave)
@@ -825,6 +863,7 @@ APlayerController::PlayHapticEffect
 
 In AHandController::ActorBeginOverlap: 
 
+```c
 		AVRCharacter* Papa = Cast<AVRCharacter>(GetAttachParentActor());
 		if (Papa != nullptr)
 		{
@@ -834,9 +873,10 @@ In AHandController::ActorBeginOverlap:
 				PlayControl->PlayHapticEffect(CurveHaptic, MotionController->GetTrackingSource());
 			}
 		}
+```
 		
-------------------------------
-Climbing Motion (part 1)
+---
+## Climbing Motion (part 1)
 
 Grip and move ourself
 
@@ -846,6 +886,8 @@ GripLeft - GripRight
 
 Set inputs in VRCharacter
 use functions for each axis
+
+```c
 	void GripLeft();
 	void ReleaseLeft();
 	void GripRight();
@@ -855,6 +897,7 @@ use functions for each axis
 	PlayerInputComponent->BindAction(TEXT("GripLeft"), IE_Released, this, &AVRCharacter::ReleaseLeft);
 	PlayerInputComponent->BindAction(TEXT("GripRight"), IE_Pressed, this, &AVRCharacter::GripRight);
 	PlayerInputComponent->BindAction(TEXT("GripRight"), IE_Released, this, &AVRCharacter::ReleaseRight);
+```
 	
 and create Grip and Release functions in HandController class
 
@@ -868,6 +911,7 @@ Make the Character Move
 - Move the pawn in tick
 - The controller should stay still
 
+```c
 void AHandController::Grip()
 {
 	if (!bCanClimb) return;
@@ -887,8 +931,10 @@ void AHandController::Tick(float DeltaTime)
 		GetAttachParentActor()->AddActorWorldOffset(-Delta);
 	}
 }
-------------------------------
-Climbing Motion (part 2)
+```
+
+---
+## Climbing Motion (part 2)
 
 Set your climbing wall with more Actors
 
@@ -897,11 +943,13 @@ EmovementMode to MOVE_Flying
 
 Pair controllers
 
+```c
 void AHandController::PairController(AHandController* Controller)
 {
 	OtherController = Controller;
 	OtherController->OtherController = this;
 }
+```
 
 In AVRCharacter::BeginPlay():
 LeftController->PairController(RightController);
@@ -912,6 +960,7 @@ Steal The Climb State
 - What should happen on release?
 - Can you climb the wall?
 
+```c
 void AHandController::Grip()
 {
 	if (!bCanClimb) return;
@@ -943,4 +992,4 @@ void AHandController::Release()
 		}
 	}
 }
-
+```
