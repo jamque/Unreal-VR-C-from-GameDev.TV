@@ -28,6 +28,7 @@ Put your Oculus Quest into developer mode, using your mobile Oculus app.(Maybe y
   - SDK Components Setup by default too.
   - Emulator Setting by default too.
   - Click finish and wait for install process (may take a while).
+  - *Uninstall SDK tools 31.0. Unreal will download itself the version that need when compile the first time.*
   - Close Android Studio.
 
 ## Step 4 - Setting  up the Oculus Developer Hub
@@ -82,9 +83,28 @@ Put your Oculus Quest into developer mode, using your mobile Oculus app.(Maybe y
 
 **BEWARE! If project fails to build. Go to Android Studio and Uninstall SDK tools 31.0. Unreal will download itself the version that need.**
 
-- In Output Log, when process finish, you would see a line like *Stating Intent* followed by your poject name. This marks that your game is in your Oculus headset.
+- In Output Log, when process finish, you would see a line like *Stating Intent* followed by your poject name. This marks that your game is running in your Oculus headset.
+
 ## Step 7 - Testing our Oculus Quest Build
+Launch Icon in Unreal runs your game directly in your Oculus Quest 2 headset. But you can found your APK in Apps/Unknown Sources folder in Oculus Menu and execute it.
 ## Step 8 - Sharing our test build with others
+Before create a .APK:
+- In Unreal Editor in *Edit ->Project Settings* search in *Platforms-> Android* tab and check *Package game data inside .APK?*
+
+In Unreal Editor Select Menu *File->PackageProject->Android->Android ASTC*, select folder destination where you want your .APK file. And the packaging process will begin.
+
+In the process, Unreal create a folder named **Android_ASTC** in the destination folder selected with these files:
+- Uninstall_[ProjectName]-armv7.bat
+- Install_[ProjectName]-armv7.bat
+- [ProjectName]-armv7.apk
+
+Send this .APK file to your friends
+
+Use SideQuest https://sidequestvr.com/ to upload your game in another Oculus headset.
+
+---
+---
+---
 
 # Step tp VR
 
