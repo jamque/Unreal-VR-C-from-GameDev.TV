@@ -4,6 +4,7 @@
 Hardware:
 - Oculus Quest HMD
 - USB type C cable (charging cable)
+- Bluetooth in Pc Computer
 
 Software:
 - Unreal Engine
@@ -37,6 +38,7 @@ Put your Oculus Quest into developer mode, using your mobile Oculus app.(Maybe y
 - Open program.
   - Maybe you will be answered about ADB (Android Debug Bridge) client and version that it use. If this happens press Change ADB path. This actions need to restart Oculus Developer Hub.
   - Make sure that your Org Manager tab are using your Name organization setted in step 1.
+  - BEWARE! Pc must have Bluetooth to link with Oculus Quest!
   - If you connect your headset, click on My device to manage it. If it doesn't check inside your headset and allow your machine to access your headsets data.
 
 ## Step 5 - Setting up Unreal Engine for Oculus Quest Development
