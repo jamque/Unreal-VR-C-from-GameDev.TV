@@ -62,4 +62,12 @@ private:
 	FVector ClimingStartLocation;
 
 	AHandController* OtherController;
+
+	// Art
+protected:
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMesh *MeshLeft;
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMesh *MeshRight;
+
 };

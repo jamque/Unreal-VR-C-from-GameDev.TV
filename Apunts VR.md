@@ -105,6 +105,22 @@ Send this .APK file to your friends
 Use SideQuest https://sidequestvr.com/ to upload your game in another Oculus headset.
 
 ---
+## Some notes and possible errors:
+
+UE4 Build Error When building project for Android.
+```
+    LogPlayLevel: Error: ERROR: System.ArgumentException: Attempt to construct staged filesystem reference from absolute path (/Content/StarterContent/Textures/SomeTexture.uasset). Staged paths are always relative to the staging root.
+```
+To fix, open Command Prompt and type:
+```
+C:\Users\adamos>adb shell
+hero2lte:/ $ cd sdcard
+hero2lte:/sdcard $ ls
+Alarms DCIM GSWave Music Pictures Podcasts Samsung
+Android Download Movies Notifications Playlists Ringtones UE4Game
+hero2lte:/sdcard $ rm -r UE4Game/
+```
+---
 ---
 ---
 

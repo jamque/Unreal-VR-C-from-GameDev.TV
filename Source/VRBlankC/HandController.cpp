@@ -8,6 +8,8 @@
 #include "VRCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
+//#include "Engine/StaticMesh.h"
+
 // Sets default values
 AHandController::AHandController()
 {
@@ -16,7 +18,9 @@ AHandController::AHandController()
 
 	MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("Ma"));
 	SetRootComponent(MotionController);
-	MotionController->bDisplayDeviceModel = true;
+	// For Oculus Quest must be setted with StaticMesh
+	MotionController->SetShowDeviceModel(true);
+	MotionController->SetDisplayModelSource(UMotionControllerComponent::CustomModelSourceId);
 
 	SphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("Esfera de Collision"));
 	SphereCollision->SetupAttachment(MotionController);
@@ -53,6 +57,14 @@ void AHandController::SetHand(FName Hand)
 	if (MotionController != nullptr)
 	{
 		MotionController->SetTrackingMotionSource(Hand);
+		if (Hand == FName("Left"))
+		{
+			MotionController->SetCustomDisplayMesh(MeshLeft);
+		}
+		if (Hand == FName("Right"))
+		{
+			MotionController->SetCustomDisplayMesh(MeshRight);
+		}
 	}
 
 }
