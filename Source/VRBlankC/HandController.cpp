@@ -57,11 +57,11 @@ void AHandController::SetHand(FName Hand)
 	if (MotionController != nullptr)
 	{
 		MotionController->SetTrackingMotionSource(Hand);
-		if (Hand == FName("Left"))
+		if (Hand == FName(TEXT("Left")))
 		{
 			MotionController->SetCustomDisplayMesh(MeshLeft);
 		}
-		if (Hand == FName("Right"))
+		if (Hand == FName(TEXT("Right")))
 		{
 			MotionController->SetCustomDisplayMesh(MeshRight);
 		}

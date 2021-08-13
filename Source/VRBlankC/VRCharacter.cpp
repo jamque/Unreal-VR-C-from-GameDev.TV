@@ -67,14 +67,14 @@ void AVRCharacter::BeginPlay()
 	{
 		LeftController->AttachToComponent(VRArrel,FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 		LeftController->SetOwner(this);
-		LeftController->SetHand("Left");
+		LeftController->SetHand(TEXT("Left"));
 	}
 	RightController = GetWorld()->SpawnActor<AHandController>(HandControllerClass, EmptyTR);
 	if (RightController != nullptr)
 	{
 		RightController->AttachToComponent(VRArrel, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 		RightController->SetOwner(this);
-		RightController->SetHand("Right");
+		RightController->SetHand(TEXT("Right"));
 	}
 	LeftController->PairController(RightController);
 }
