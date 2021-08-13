@@ -62,6 +62,9 @@ Put your Oculus Quest into developer mode, using your mobile Oculus app.(Maybe y
    - Use *directtional lights* with *Mobility* to *Static*
    - Put *Intensity* to *1.15 lux* (this is ad advice only)
 
+- In Oculus Quest, Tracking Origin is the floor. If you are using Character, move HDR to Capsule Floor.
+   - Thanks to "Citizen Upgrade" https://codeburst.io/quickstart-guide-to-oculus-quest-2-and-unreal-engine-4-506ca8c27a05
+
 - In *Edit Menu ->Plugins*:
    - Locate Virtual tab ann make sure that the Oculur VR plugin is enable.
    

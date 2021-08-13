@@ -25,10 +25,12 @@ AVRCharacter::AVRCharacter()
 	VRArrel = CreateDefaultSubobject<USceneComponent>(TEXT("VRArrel"));
 	VRArrel->SetupAttachment(GetRootComponent());
 
+	// In Oculus Quest Tracking Origin is the floor, then Move HDR to Capsule Floor.
+	FVector OculusOriginPositionCorrection(0.0f, 0.0f, - GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
+	VRArrel->AddRelativeLocation(OculusOriginPositionCorrection);
+
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(VRArrel);
-	//FVector CamPosRelative = FVector(0.0f, 0.0f, 60.0f);
-	//Camera->SetRelativeLocation(CamPosRelative);
 
 	TeleportPath = CreateDefaultSubobject<USplineComponent>(TEXT("CamiVisibleTeleport"));
 	TeleportPath->SetupAttachment(VRArrel);
