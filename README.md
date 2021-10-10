@@ -1,4 +1,4 @@
-# Unreal VR in C++ for Oculus Quest 2 - Learning to do it with GameDev.TV
+# Unreal VR in C++ for Oculus Quest 2 - Learning how to do it with GameDev.TV
 Learning Unreal VR from C++
 
 First part of [Gamedev.TV Unreal VR Course](https://www.gamedev.tv/p/unrealvr).
